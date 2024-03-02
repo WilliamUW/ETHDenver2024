@@ -31,5 +31,21 @@ https://github.com/WilliamUW/ETHDenver2024/blob/main/story-protocol/scripts/crea
 https://github.com/WilliamUW/ETHDenver2024/blob/main/story-protocol/scripts/mintNFT.ts
 
 ![alt text](image.png)
-![ip assets befit](https://github.com/WilliamUW/ETHDenver24/assets/22282583/d087e1ab-253d-43b3-a38d-f78b05d9dfb6)
+
+![ip assets befit](https://github.com/WilliamUW/ETHDenver2024/assets/22282583/d087e1ab-253d-43b3-a38d-f78b05d9dfb6)
+
 Explorer link: https://explorer.storyprotocol.xyz/ipa/0xccc99fcb118111e0927292a65d8f0e299934be28
+
+**Meme**
+![image](https://github.com/WilliamUW/ETHDenver2024/assets/22282583/f5ec0ded-07cc-4e4b-b349-bfa59b7c38cb)
+
+![image](https://github.com/WilliamUW/ETHDenver2024/assets/22282583/d46d4edc-ea6e-4395-9e1b-4cfea8057096)
+
+https://explorer.storyprotocol.xyz/collections/0xba38473b072f407498c5d36296a3debbc8a49084
+
+Register as ip asset: https://sepolia.etherscan.io/tx/0x2b1b4302fc6ca91e72bf253aa2f1a7438607aff321db1e19fb3fae51adde5733
+
+Register pil policy: https://sepolia.etherscan.io/tx/0xcf69b1613cadeee41af2284b5e7f9019a0d6a0b736a5d42e0ebad40566acf429
+
+https://explorer.storyprotocol.xyz/ipa/0xaf153e7ccbc6937d226f5015161121122fca51e3
+
