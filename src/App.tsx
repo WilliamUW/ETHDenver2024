@@ -1,11 +1,12 @@
 import * as posenet from "@tensorflow-models/posenet";
 import * as tf from '@tensorflow/tfjs';
 
-import { Button, Text } from "@chakra-ui/react";
+import { Button, IconButton, Spinner, Stack, Text } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 
 import { Flex } from "@chakra-ui/react";
 import Header from "./Header";
+import { IconCircle, } from "@tabler/icons-react";
 import SetAlarm from "./SetAlarm";
 import Webcam from "react-webcam";
 import alarm from "./assets/alarm.mp3"
@@ -18,9 +19,9 @@ function App() {
   const [pushUpCount, setPushUpCount] = useState(0);
   //const [armAboveHead, setArmAboveHead] = useState(false);
   const [isDown, setIsDown] = useState(false);
-  const downThreshold = 100; // Adjust as needed
+  const downThreshold = 110; // Adjust as needed
   const upThreshold = 160; // Adjust as needed
-  const minPushUpDelay = 500; // Delay between counted doing pushups in milliseconds
+  const minPushUpDelay = 200; // Delay between counted doing pushups in milliseconds
   const lastPushUpTime = useRef(0);
   const [base64, setBase64] = useState<string | ArrayBuffer | null>(null);
   const [result, setResult] = useState<string>("");
@@ -30,12 +31,29 @@ function App() {
   const [alarmTime, setAlarmTime] = useState<string>("");
   const [alarmSet, setAlarmSet] = useState<boolean>(false);
   const [audio] = useState(new Audio(alarm));
+  const [recordingStarted, setRecordingStarted] = useState<boolean>(false)
+  const pushupsDone = pushUpCount >= 10;
 
   function startRecognition() {
     const loadPosenet = async () => {
       await tf.setBackend('webgl');
-      const net = await posenet.load();
+      //const net = await posenet.load();
+      console.log('Loading model...');
+      // const net = await posenet.load({
+      //   architecture: 'MobileNetV1',
+      //   outputStride: 32,
+      //   inputResolution: { width: 640, height: 480 },
+      //   multiplier: 1
+      // });
+     
+      const net = await posenet.load({
+        architecture: 'ResNet50',
+        outputStride: 32,
+        inputResolution: 257,
+        quantBytes: 4 //The higher the value, the larger the model size and accuracy
+      });
       setNet(net);
+      console.log('Loaded.')
     };
     loadPosenet();
   };
@@ -61,35 +79,36 @@ function App() {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
 
           // Draw the pose skeleton
-          if (pose.score >= 0.25) {
+          if (pose.score >= 0.65) {
             const limbKeypoints = [
               ['leftShoulder', 'rightShoulder'],
               ['leftShoulder', 'leftElbow'],
               ['rightShoulder', 'rightElbow'],
               ['leftElbow', 'leftWrist'],
               ['rightElbow', 'rightWrist'],
-              ['leftHip', 'rightHip'],
-              ['leftHip', 'leftKnee'],
-              ['rightHip', 'rightKnee'],
-              ['leftKnee', 'leftAnkle'],
-              ['rightKnee', 'rightAnkle']
+              // ['leftHip', 'rightHip'],
+              // ['leftHip', 'leftKnee'],
+              // ['rightHip', 'rightKnee'],
+              // ['leftKnee', 'leftAnkle'],
+              // ['rightKnee', 'rightAnkle']
             ];
-
-            limbKeypoints.forEach(([keypointNameA, keypointNameB]) => {
-              const keypointA = pose.keypoints.find(kp => kp.part === keypointNameA);
-              const keypointB = pose.keypoints.find(kp => kp.part === keypointNameB);
-
-              if (keypointA && keypointB && keypointA.score > 0.1 && keypointB.score > 0.1) {
-                ctx.beginPath();
-                ctx.moveTo(keypointA.position.x, keypointA.position.y);
-                ctx.lineTo(keypointB.position.x, keypointB.position.y);
-                ctx.strokeStyle = '#00FF00';
-                ctx.stroke();
-              }
-            });
+            if(pose.keypoints.length > 2){
+              limbKeypoints.forEach(([keypointNameA, keypointNameB]) => {
+                const keypointA = pose.keypoints.find(kp => kp.part === keypointNameA);
+                const keypointB = pose.keypoints.find(kp => kp.part === keypointNameB);
+  
+                if (keypointA && keypointB && keypointA.score > 0.7 && keypointB.score > 0.7) {
+                  ctx.beginPath();
+                  ctx.moveTo(keypointA.position.x, keypointA.position.y);
+                  ctx.lineTo(keypointB.position.x, keypointB.position.y);
+                  ctx.strokeStyle = '#00FF00';
+                  ctx.stroke();
+                }
+              });
+            }
+            
             // Check for push-up count
-            if (pose && pose.keypoints.length > 0) {
-              console.log(lastPushUpTime);
+            if (pose && pose.keypoints.length > 2) {
               // Define indexes for relevant body parts
               const leftShoulder = pose.keypoints[5];
               const leftElbow = pose.keypoints[7];
@@ -97,22 +116,26 @@ function App() {
               const rightShoulder = pose.keypoints[6];
               const rightElbow = pose.keypoints[8];
               const rightWrist = pose.keypoints[10];
-
               // Calculate angles
-              const leftAngle = calculateAngle(leftShoulder, leftElbow, leftWrist);
-              const rightAngle = calculateAngle(rightShoulder, rightElbow, rightWrist);
+              let leftAngle = calculateAngle(leftShoulder, leftElbow, leftWrist);
+              let rightAngle = calculateAngle(rightShoulder, rightElbow, rightWrist);
+              if(isDown && leftAngle >= 180) leftAngle = Math.abs(360-leftAngle);
+              if(isDown && rightAngle > 180) rightAngle = Math.abs(360-rightAngle);
+              console.log(leftAngle, rightAngle);
               // Detect push-up phases
-              if (!isDown && leftAngle < downThreshold && rightAngle < downThreshold) {
+              if (!isDown && leftAngle <= downThreshold && rightAngle <= downThreshold) { //down motion
                 // Transition from up to down phase
-                setIsDown(true);
-              } else if (Date.now() - lastPushUpTime.current > minPushUpDelay
-                        && isDown && leftAngle > upThreshold && rightAngle > upThreshold) {
-                // Transition from down to up phase
-                setIsDown(false);
-                // Increment push-up count
-                if (Date.now() > lastPushUpTime.current) lastPushUpTime.current = Date.now();
-                //console.log(lastPushUpTime)
-                setPushUpCount(prevCount => prevCount + 1);
+                if(Date.now() - lastPushUpTime.current > minPushUpDelay){
+                  setIsDown(true);
+                  lastPushUpTime.current = Date.now()
+                }
+              }
+              else if (isDown && leftAngle >= upThreshold && rightAngle >= upThreshold) { //up motion
+                if (Date.now() - lastPushUpTime.current > minPushUpDelay + 200){
+                  setIsDown(false);
+                  lastPushUpTime.current = Date.now();
+                  setPushUpCount(prevCount => prevCount + 1);
+                }
               }
             }
           }
@@ -138,45 +161,72 @@ function App() {
 };
 
   return (
-    <Flex
-      flexDirection={"column"}
-      backgroundColor={"black"}
-      height={"100vh"}
-      mx="auto"
-      alignItems={"center"}
-      maxWidth={"700px"}
-      width={"100%"}
-    >
-      <Webcam
-        ref={webcamRef}
-        width={640}
-        height={480}
-        videoConstraints={{
-          facingMode: "user"
-        }}
-      />
-      <canvas
-        ref={canvasRef}
-        style={{
-          position: "absolute",
-          top: 0,
-          zIndex: 1
-        }}
-        width={640}
-        height={480}
-      />
+    <Flex flexDirection={"column"} backgroundColor={"black"} height={"100vh"} mx="auto" alignItems={"center"} maxWidth={"700px"} width={"100%"}>
+      <Header />
+      {pushupsDone && (
+        <div>
+          <Text style={{ color: "white", fontSize: "x-large", textAlign: "center" }}>Congrats on completing your BeFit!</Text>
+          <br />
+          <img src="https://i.giphy.com/MhHXeM4SpKrpC.webp" alt="gif" />
+        </div>
+      )}
+      {!pushupsDone && (
+        <div>
+          <Webcam
+            ref={webcamRef}
+            width={640}
+            height={480}
+            style={{ borderRadius: "10px" }}
+            videoConstraints={{
+              facingMode: "user",
+            }}
+          />
+          <canvas
+            ref={canvasRef}
+            style={{
+              position: "absolute",
+              top: 0,
+              zIndex: 1,
+            }}
+            width={640}
+            height={480}
+          />
+        </div>
+      )}
       <br />
-      <Button onClick={() => startRecognition()}>Start!</Button>
+      <br />
+      {recordingStarted ? (
+        <Stack>
+          <Spinner
+            thickness="7px"
+            speed="1.5s"
+            emptyColor="gray.200"
+            color="black"
+            width="65px"
+            height="65px"
+            onClick={() => {
+              setRecordingStarted(!recordingStarted);
+            }}
+          />
+        </Stack>
+      ) : (
+        <Stack>
+          <IconButton
+            colorScheme={"transparent"}
+            aria-label="take befit"
+            onClick={() => {
+              setRecordingStarted(!recordingStarted);
+              startRecognition();
+            }}
+            icon={<IconCircle color={"white"} size={"80px"} />}
+          />
+        </Stack>
+      )}
+
       <br />
 
-      <Text style={{ color: "white" }}>Push-up Count: {pushUpCount} / 10</Text>
-        <SetAlarm
-        task={task}
-        setTask={setTask}
-        alarmTime={alarmTime}
-        setAlarmTime={setAlarmTime}
-        result={pushUpCount >= 10}
-      />
+      <Text style={{ color: "white", fontSize: "x-large" }}>Push-up Count: {pushUpCount} / 10</Text>
+      <SetAlarm task={task} setTask={setTask} alarmTime={alarmTime} setAlarmTime={setAlarmTime} result={pushUpCount >= 10} />
     </Flex>
   );
 }

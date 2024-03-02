@@ -37,6 +37,13 @@ Technologies Used: Machine Learning for exercise verification, Blockchain for NF
 
 Check out our [demo](https://befit.example.com/demo) and see how BeFit is changing the fitness game!
 
+Human pose estimation for fitness activity detection using PoseNet (implementing MobileNetV1)
+
+![posenet_keypoints](https://1.bp.blogspot.com/-ZYpTHDHyxJM/XcCn7Tys87I/AAAAAAAAAx8/Znnss3H4iGkQ4k_X3flXDaUALHvFW0jDACLcBGAsYHQ/s320/c1.png)
+![posenet_keypoints2](https://camo.githubusercontent.com/c3641b718d7e613b2ce111a6a4575e88ca35a60cb325efdd9113c453b2a09301/68747470733a2f2f73746f726167652e676f6f676c65617069732e636f6d2f6d6f76656e65742f636f636f2d6b6579706f696e74732d3530302e706e67)
+
+https://blog.tensorflow.org/2018/05/real-time-human-pose-estimation-in.html
+
 ## Pitch
 
 👀 [Slide Deck]()
@@ -46,6 +53,12 @@ Check out our [demo](https://befit.example.com/demo) and see how BeFit is changi
 
 ## Instructions
 
-copy .env.example as .env
-yarn install
+Run in command line at project root:
+
+yarn install (if doesn't work, use npm install)
+
 yarn dev
+
+Deprecated instructions:
+
+copy .env.example as .env

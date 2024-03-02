@@ -7,8 +7,8 @@ import { ChatOpenAI } from "langchain/chat_models/openai";
 import { HumanMessage } from "langchain/schema";
 import { IconCircle } from "@tabler/icons-react";
 import Webcam from "react-webcam";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+
+import logoSquare from "./logo-square.png";
 
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 

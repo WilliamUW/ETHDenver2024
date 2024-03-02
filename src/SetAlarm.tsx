@@ -12,16 +12,16 @@ interface SetAlarmProps {
 
 const SetAlarm: React.FC<SetAlarmProps> = ({ task, setTask, alarmTime, setAlarmTime, result }) => {
   const friendsData = [
-    { name: "Sarah", time: "7:23am", message: "Wake up Xavier! We got a movie to go to at 8am!" },
-    { name: "Amy", time: "7:54am", message: "Wake up sleepyhead, we're waiting for you at school." },
-    { name: "William", time: "8:12am", message: "LOL dude stop sleeping in" },
+    { name: "Sarah", time: "10:23pm", message: "Hurry up Xavier we got a movie to go to at 12!" },
+    { name: "Amy", time: "10:54pm", message: "We're waiting for you to do your BeFit!!!" },
+    { name: "William", time: "11:12pm", message: "LOL dude stop being lazy" },
     // Add more friends as needed
   ];
   
   const friendImages = [
-    "https://www.pedestrian.tv/wp-content/uploads/2022/08/15/Image-from-iOS-5-e1660543786465.jpg?quality=75",
-    "https://josiegirlblog.com/wp-content/uploads/2022/08/Screen-Shot-2022-08-15-at-11.48.49-AM-614x1024.jpg",
-    "https://www.boredpanda.com/blog/wp-content/uploads/2022/10/39-635fd45a12ad3__700.jpg",
+    "https://cdn.discordapp.com/attachments/1206372275050520617/1213361507040104479/IMG_4022.mov?ex=65f531f6&is=65e2bcf6&hm=307d65eefb06d3faf3537d4033d3f8773108f2daaf9bb695dcc5391ceaf76b81&",
+    "https://cdn.discordapp.com/attachments/1206372275050520617/1213361507866517514/IMG_4023.mov?ex=65f531f6&is=65e2bcf6&hm=ed524d09f1df49c2cca296706e2a3a2e5d1900a4cc9d691d443f2a76dfcdb020&",
+    "https://cdn.discordapp.com/attachments/1206372275050520617/1213361507866517514/IMG_4023.mov?ex=65f531f6&is=65e2bcf6&hm=ed524d09f1df49c2cca296706e2a3a2e5d1900a4cc9d691d443f2a76dfcdb020&",
     // Add more image URLs as needed
   ];
   return (
@@ -45,9 +45,9 @@ const SetAlarm: React.FC<SetAlarmProps> = ({ task, setTask, alarmTime, setAlarmT
 
   {friendsData.map((friend, index) => (
     <React.Fragment key={index}>
-      <Text fontSize="xl" color="white">{`${friend.name} did her BeFit at ${friend.time}`}</Text>
+      <Text fontSize="xl" color="white">{`${friend.name} did their BeFit at ${friend.time}`}</Text>
       <Text fontSize="s" color="white">{`${friend.name}: ${friend.message}`}</Text>
-      <Image src={result ? friendImages[index] : "https://img.freepik.com/free-vector/clear-blurred-background_1034-587.jpg" } alt={`Image ${index + 1}`} objectFit="cover" borderRadius="md" />
+      <video src={result ? friendImages[index] : "https://img.freepik.com/free-vector/clear-blurred-background_1034-587.jpg" } alt={`Video ${index + 1}`} controls objectFit="cover" borderRadius="md" />
     </React.Fragment>
   ))}
 

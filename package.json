@@ -15,7 +15,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mediapipe/pose": "^0.5.1675469404",
-    "@tabler/icons-react": "^2.41.0",
+    "@tabler/icons-react": "^2.47.0",
     "@techstark/opencv-js": "^4.9.0-release.2",
     "@tensorflow-models/posenet": "^2.2.2",
     "@tensorflow/tfjs": "^4.17.0",
