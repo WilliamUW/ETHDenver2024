@@ -7,7 +7,7 @@ Application to address NFT use case. Deploy contracts on Arbitrum One, Arbitrum 
     
 ### Please add a sentence or two on why you're applicable for this prize.
 
-BeFit uniquely addresses the NFT use case by integrating physical fitness with digital collectibles through its Pushup Tracker smart contract on Arbitrum One. For every 10 pushups completed, users are rewarded with minted NFTs, blending the pursuit of health with the excitement of collecting digital art. This innovative approach not only incentivizes regular exercise but also enriches the Arbitrum NFT ecosystem by introducing a novel utility that meets the unmet needs of fitness enthusiasts and NFT collectors alike. By providing tangible rewards for physical activity, BeFit stands as a pioneering application that enhances the existing NFT landscape and opens up new avenues for user engagement and utility in the social fitness space.
+BeFit uniquely addresses the NFT use case by integrating physical fitness with digital collectibles through its Pushup Tracker smart contract on Arbitrum One. For every 10 pushups completed, users are rewarded with minted NFTs, blending the pursuit of health with the excitement of collecting digital art. This innovative approach not only incentivizes regular exercise but also enriches the Arbitrum NFT ecosystem by introducing a novel utility that meets the unmet needs of fitness enthusiasts and NFT collectors alike, opening up new avenues for user engagement and utility in the social fitness space.
 
 ### Link to the code where the tech is used.
 
