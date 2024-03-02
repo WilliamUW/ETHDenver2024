@@ -216,7 +216,7 @@ function App() {
           <Button
             onClick={async () => {
               const response = await mintNFT();
-              alert(response.toString());
+              alert(JSON.stringify(response));
               alert(response.data.transaction_details.blockExplorer);
             }}
             style={{ fontSize: "medium", textAlign: "center", margin: "0 auto" }}

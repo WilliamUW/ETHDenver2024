@@ -11,4 +11,4 @@ We are using QuickNode to fetch NFT Collection Details as well as NFTs by collec
 
 
 ### Link to the code where the tech is used.
-https://github.com/WilliamUW/ETHDenver24/blob/bed2fafd2b74efb42b583bc5e1e2fb8344b80729/src/quickNodeAPI.tsx#L1-L23
+https://github.com/WilliamUW/ETHDenver2024/blob/bed2fafd2b74efb42b583bc5e1e2fb8344b80729/src/quickNodeAPI.tsx#L1-L23
