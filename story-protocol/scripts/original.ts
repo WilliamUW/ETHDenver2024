@@ -2,22 +2,13 @@ import { StoryClient, StoryConfig } from '@story-protocol/core-sdk'
 import { http, Address } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { mintNFT } from './mintNFT'
-import { Buffer } from 'buffer';
 
 const main = async function () {
     // 1. Set up your wallet for this tutorial.
     // - Add your private key to your .env file.
     // - Add your rpc provider url to your .env file 
     //      - We recommend the Sepolia test network: https://rpc.ankr.com/eth_sepolia
-    console.log(typeof process.env.WALLET_PRIVATE_KEY);
-    const privateKeyEnv = process.env.WALLET_PRIVATE_KEY;
-    if (typeof privateKeyEnv !== 'string') {
-        throw new Error('WALLET_PRIVATE_KEY is not set in the environment variables.');
-    }
-    const privateKey = Buffer.from(privateKeyEnv, 'hex');
-    const hexPrivateKey = `0x${privateKey.toString('hex')}`;
-    const account = privateKeyToAccount(hexPrivateKey as `0x${string}`);
-
+    const account = privateKeyToAccount(process.env.WALLET_PRIVATE_KEY as Address)
     const config: StoryConfig = {
         account,
         transport: http(process.env.RPC_PROVIDER_URL),

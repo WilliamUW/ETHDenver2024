@@ -4,7 +4,21 @@ import { sepolia } from 'viem/chains'
 
 export async function mintNFT(): Promise<string> {
     console.log('Minting a new NFT...')
-    const account = privateKeyToAccount(process.env.WALLET_PRIVATE_KEY as Address)
+    const privateKeyEnv = process.env.WALLET_PRIVATE_KEY;
+    if (typeof privateKeyEnv !== 'string') {
+        throw new Error('WALLET_PRIVATE_KEY is not set in the environment variables.');
+    }
+    const privateKey = Buffer.from(privateKeyEnv, 'hex');
+    const hexPrivateKey = `0x${privateKey.toString('hex')}`;
+    
+    const nftAddressEnv = process.env.MY_NFT_CONTRACT_ADDRESS;
+    if (typeof nftAddressEnv !== 'string') {
+        throw new Error('MY_NFT_CONTRACT_ADDRESS is not set in the environment variables.');
+    }
+    const nftAddress = Buffer.from(nftAddressEnv, 'hex');
+    const hexNftAddress = `0x${nftAddress.toString('hex')}`;
+
+    const account = privateKeyToAccount(hexPrivateKey as `0x${string}`);
     const walletClient = createWalletClient({
         account,
         chain: sepolia,
@@ -26,19 +40,19 @@ export async function mintNFT(): Promise<string> {
 
     // 3. Mint an NFT to your account
     const { result } = await publicClient.simulateContract({
-        address: process.env.MY_NFT_CONTRACT_ADDRESS as Address,
-        functionName: 'mint',
+        address: hexNftAddress as Address,//process.env.MY_NFT_CONTRACT_ADDRESS as Address,
+        functionName: 'safeMint',
         args: [account.address],
         abi: [contractAbi]
     })
     const hash = await walletClient.writeContract({
         address: process.env.MY_NFT_CONTRACT_ADDRESS as Address,
-        functionName: 'mint',
+        functionName: 'safeMint',
         args: [account.address],
         abi: [contractAbi]
     })
 
-    let tokenId = result!.toString();
+    const tokenId = result!.toString();
 
     console.log(`Minted NFT successful with hash: ${hash}`);
     console.log(`Minted NFT tokenId: ${tokenId}`);
