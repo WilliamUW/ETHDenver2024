@@ -11,5 +11,7 @@
     "module": "es2015"
   },
   "include": ["src/client/**/*"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "noImplicitAny": false
+
 }

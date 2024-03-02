@@ -17,5 +17,9 @@ https://arbiscan.io/address/0x6A3c3B82E95f010C4bc63A7a378b2233dF6bB737
 
 https://github.com/WilliamUW/ETHDenver2024/blob/main/contracts/BeFit.sol
 
+https://sepolia.arbiscan.io/tx/0x64e90e68692a5bb1ede99e9c831e01a6eedd45b0d552c99a013eee7ca6004853
+
+https://testnets.opensea.io/assets/arbitrum-sepolia/0x984c2a485124e41d5f6f63140a309b76308bc8e0/210000
+
 
 ### Additional Feedback

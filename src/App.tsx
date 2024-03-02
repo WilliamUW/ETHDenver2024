@@ -1,17 +1,46 @@
 import * as posenet from "@tensorflow-models/posenet";
 import * as tf from '@tensorflow/tfjs';
 
-import { Button, IconButton, Spinner, Stack, Text, Box } from "@chakra-ui/react";
+import { Box, Button, IconButton, Spinner, Stack, Text } from "@chakra-ui/react";
+import axios, { AxiosResponse } from 'axios';
 import { useEffect, useRef, useState } from "react";
 
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Flex } from "@chakra-ui/react";
+import FormData from 'form-data';
 import Header from "./Header";
 import { IconCircle, } from "@tabler/icons-react";
 import SetAlarm from "./SetAlarm";
 import Webcam from "react-webcam";
 import alarm from "./assets/alarm.mp3"
 import { useAccount } from "wagmi";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+
+async function mintNFT(): Promise<AxiosResponse<any>> {
+  alert('Minting NFT...');
+  const formData = new FormData();
+  formData.append('chain', 'arbitrum-sepolia');
+  formData.append('name', 'BeFit for March 2nd');
+  formData.append('description', 'Congrats on doing 10 pushups!');
+  formData.append('recipientAddress', '0x0E5d299236647563649526cfa25c39d6848101f5');
+  formData.append('data', 'https://images-ext-1.discordapp.net/external/vCzV1HktGL3LbnfrewWMUPh_NC5usJKfSFqS_rHcXA4/https/assets.devfolio.co/hackathons/f3d1fd4a9c8742e39d40c74dff7783b2/projects/4f6bac589ce04f0aaae931876580477e/bf6b8ca6-e59c-4412-b8ea-d6886bc39a56.jpeg?format=webp&width=516&height=270');
+  formData.append('imageUrl', 'https://images-ext-1.discordapp.net/external/vCzV1HktGL3LbnfrewWMUPh_NC5usJKfSFqS_rHcXA4/https/assets.devfolio.co/hackathons/f3d1fd4a9c8742e39d40c74dff7783b2/projects/4f6bac589ce04f0aaae931876580477e/bf6b8ca6-e59c-4412-b8ea-d6886bc39a56.jpeg?format=webp&width=516&height=270');
+
+  try {
+    const response = await axios.post('https://api.verbwire.com/v1/nft/mint/quickMintFromMetadata', formData, {
+      headers: {
+          'X-API-Key': 'sk_live_5b963604-629c-4156-ac69-433d1db6f108',
+          'accept': 'application/json',
+          // Omit 'Content-Type': 'multipart/form-data' since it's set automatically
+      },
+  });
+      console.log(response.data);
+      return response;
+  } catch (error) {
+      console.error(error);
+      throw error;
+  }
+}
+
 function App() {
   const [net, setNet] = useState<posenet.PoseNet | null>(null);
   const webcamRef = useRef<Webcam>(null);
@@ -58,6 +87,19 @@ function App() {
     };
     loadPosenet();
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (recordingStarted && !pushupsDone) {
+      setPushUpCount(prevCount => prevCount + 1);
+      }
+    }, 1500);
+
+    return () => {
+      clearInterval(interval);
+
+    };
+  }, [recordingStarted, pushupsDone]);
 
   useEffect(() => {
     const drawSkeleton = async () => {
@@ -166,10 +208,21 @@ function App() {
     <Flex flexDirection={"column"} backgroundColor={"black"} height={"100vh"} mx="auto" alignItems={"center"} maxWidth={"700px"} width={"100%"}>
       <Header />
       {pushupsDone && (
-        <div>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           <Text style={{ color: "white", fontSize: "x-large", textAlign: "center" }}>Congrats on completing your BeFit!</Text>
           <br />
           <img src="https://i.giphy.com/MhHXeM4SpKrpC.webp" alt="gif" />
+          <br />
+          <Button
+            onClick={async () => {
+              const response = await mintNFT();
+              alert(response.toString());
+              alert(response.data.transaction_details.blockExplorer);
+            }}
+            style={{ fontSize: "medium", textAlign: "center", margin: "0 auto" }}
+          >
+            Mint BeFit. NFT for today!
+          </Button>
         </div>
       )}
       {!pushupsDone && (
