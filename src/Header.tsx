@@ -1,4 +1,5 @@
 import { Box, Image } from '@chakra-ui/react';
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 import BeFitlogo from  './assets/logo-w.png';
 import React from 'react';

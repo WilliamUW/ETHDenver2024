@@ -20,13 +20,13 @@ const SetAlarm: React.FC<SetAlarmProps> = ({ task, setTask, alarmTime, setAlarmT
   
   const friendImages = [
     "https://cdn.discordapp.com/attachments/1206372275050520617/1213361507040104479/IMG_4022.mov?ex=65f531f6&is=65e2bcf6&hm=307d65eefb06d3faf3537d4033d3f8773108f2daaf9bb695dcc5391ceaf76b81&",
-    "https://cdn.discordapp.com/attachments/1206372275050520617/1213361507866517514/IMG_4023.mov?ex=65f531f6&is=65e2bcf6&hm=ed524d09f1df49c2cca296706e2a3a2e5d1900a4cc9d691d443f2a76dfcdb020&",
+    "https://cdn.discordapp.com/attachments/1206372275050520617/1213392280325726249/ca603f04394d4af0b85fdc77819b7d9b.mov?ex=65f54e9f&is=65e2d99f&hm=6387b84da53d05f9d5e2b382b9403c71a9445652dacb06a1ab62fe2bcf7c8ab8&",
     "https://cdn.discordapp.com/attachments/1206372275050520617/1213361507866517514/IMG_4023.mov?ex=65f531f6&is=65e2bcf6&hm=ed524d09f1df49c2cca296706e2a3a2e5d1900a4cc9d691d443f2a76dfcdb020&",
     // Add more image URLs as needed
   ];
   return (
     <Flex flexDirection="column" alignItems="center">
-      <Text fontSize="xl" color="white">Make doing pushups fun everyday!</Text>
+      <Text fontSize="xl" color="white">Make doing pushups fun again!</Text>
       <br />
 
       {/* <Heading fontSize="2xl" color="white" mt="10px">
@@ -47,7 +47,7 @@ const SetAlarm: React.FC<SetAlarmProps> = ({ task, setTask, alarmTime, setAlarmT
     <React.Fragment key={index}>
       <Text fontSize="xl" color="white">{`${friend.name} did their BeFit at ${friend.time}`}</Text>
       <Text fontSize="s" color="white">{`${friend.name}: ${friend.message}`}</Text>
-      <video src={result ? friendImages[index] : "https://img.freepik.com/free-vector/clear-blurred-background_1034-587.jpg" } alt={`Video ${index + 1}`} controls objectFit="cover" borderRadius="md" />
+      {result ? <video src={friendImages[index] } controls /> : <Image src="https://img.freepik.com/free-vector/clear-blurred-background_1034-587.jpg"></Image>}
     </React.Fragment>
   ))}
 

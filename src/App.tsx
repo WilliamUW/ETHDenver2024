@@ -1,7 +1,7 @@
 import * as posenet from "@tensorflow-models/posenet";
 import * as tf from '@tensorflow/tfjs';
 
-import { Button, IconButton, Spinner, Stack, Text } from "@chakra-ui/react";
+import { Button, IconButton, Spinner, Stack, Text, Box } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 
 import { Flex } from "@chakra-ui/react";
@@ -10,7 +10,8 @@ import { IconCircle, } from "@tabler/icons-react";
 import SetAlarm from "./SetAlarm";
 import Webcam from "react-webcam";
 import alarm from "./assets/alarm.mp3"
-
+import { useAccount } from "wagmi";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 function App() {
   const [net, setNet] = useState<posenet.PoseNet | null>(null);
   const webcamRef = useRef<Webcam>(null);
@@ -159,7 +160,8 @@ function App() {
     angleDegrees = Math.abs(angleDegrees);
     return angleDegrees;
 };
-
+  const account = useAccount();
+  
   return (
     <Flex flexDirection={"column"} backgroundColor={"black"} height={"100vh"} mx="auto" alignItems={"center"} maxWidth={"700px"} width={"100%"}>
       <Header />
@@ -195,38 +197,41 @@ function App() {
       )}
       <br />
       <br />
-      {recordingStarted ? (
-        <Stack>
-          <Spinner
-            thickness="7px"
-            speed="1.5s"
-            emptyColor="gray.200"
-            color="black"
-            width="65px"
-            height="65px"
-            onClick={() => {
-              setRecordingStarted(!recordingStarted);
-            }}
-          />
+ 
+      {account.address ? (
+        <Stack alignItems={"center"} alignContent={"center"} justifyItems={"center"} justifyContent={"center"}>
+          {!pushupsDone && recordingStarted ? (
+            <Stack>
+              <Spinner
+                thickness="7px"
+                speed="1.5s"
+                emptyColor="gray.200"
+                color="black"
+                width="65px"
+                height="65px"
+                onClick={() => {
+                  setRecordingStarted(!recordingStarted);
+                }}
+              />
+            </Stack>
+          ) : (
+            <Stack>
+              <IconButton
+                colorScheme={"transparent"}
+                aria-label="take befit"
+                onClick={() => {
+                  setRecordingStarted(!recordingStarted);
+                  startRecognition();
+                }}
+                icon={<IconCircle color={"white"} size={"80px"} />}
+              />
+            </Stack>
+          )}
+          <br />
+          <Text style={{ color: "white", fontSize: "x-large" }}>Push-up Count: {pushUpCount} / 10</Text>
+          <SetAlarm task={task} setTask={setTask} alarmTime={alarmTime} setAlarmTime={setAlarmTime} result={pushUpCount >= 10} />
         </Stack>
-      ) : (
-        <Stack>
-          <IconButton
-            colorScheme={"transparent"}
-            aria-label="take befit"
-            onClick={() => {
-              setRecordingStarted(!recordingStarted);
-              startRecognition();
-            }}
-            icon={<IconCircle color={"white"} size={"80px"} />}
-          />
-        </Stack>
-      )}
-
-      <br />
-
-      <Text style={{ color: "white", fontSize: "x-large" }}>Push-up Count: {pushUpCount} / 10</Text>
-      <SetAlarm task={task} setTask={setTask} alarmTime={alarmTime} setAlarmTime={setAlarmTime} result={pushUpCount >= 10} />
+      ) : <ConnectButton/>}
     </Flex>
   );
 }
